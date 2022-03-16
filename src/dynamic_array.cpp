@@ -27,12 +27,28 @@ namespace assignment {
   }
 
   void DynamicArray::Add(int value) {
-    // Write your code here ...
+    if (size_ == capacity_) {
+      Resize(capacity_+kCapacityGrowthCoefficient);
+    }
+    data_[size_] = value;
+    size_ ++;
   }
-
   bool DynamicArray::Insert(int index, int value) {
-    // Write your code here ...
-    return false;
+    if (0>index || index>size_){
+      return false;
+    }
+    if (size_ == capacity_) {
+      Resize(capacity_+kCapacityGrowthCoefficient);
+    }
+    int c = 0;
+    for (int i=index; i<size_; i++){
+      c = data_[i];
+      data_[i] = value;
+      value = c;
+    }
+    data_[size_] = value;
+    size_++;
+    return true;
   }
 
   bool DynamicArray::Set(int index, int new_value) {
@@ -44,32 +60,21 @@ namespace assignment {
   }
 
   std::optional<int> DynamicArray::Remove(int index) {
-    if (index>=0 && index<size_){
-      int a = data_[index];
-      int* data2{nullptr};
-      data2 = new int[capacity_];
-      for (int i=0; i<capacity_-1; i++){
-        data2[i] = 0;
+    if (index>=0 && index<size_) {
+      int c = data_[index];
+      for (int i=index; i<size_-1; i++) {
+        data_[i] = data_[i + 1];
       }
-      for(int i =0; i<index; i++){
-        data2[i] = data_[i];
-      }
-      for(int i =index+1; i<capacity_-1; i++){
-        data2[i-1] = data_[i];
-      }
-      data_ = new int[capacity_-1];
-      for (int i=0; i<capacity_-1;i++){
-        data_[i]=data2[i];
-      }
-      delete [] data2;
-      data2 = nullptr;
-      return a;
+      data_[size_-1] = 0;
+      size_--;
+      return c;
     }
     return std::nullopt;
   }
 
   void DynamicArray::Clear() {
-    // Write your code here ...
+    size_ = 0;
+
   }
 
   std::optional<int> DynamicArray::Get(int index) const {
@@ -110,24 +115,26 @@ namespace assignment {
   }
 
   bool DynamicArray::Resize(int new_capacity) {
-    if (new_capacity <= capacity_){
-      return false;
+    if (new_capacity > capacity_ && new_capacity>0){
+      int* data2 = new int[new_capacity];
+      for (int i = 0; i < size_; i++)
+      {
+        data2[i] = data_[i];
+      }
+      for (int i = size_; i < new_capacity; i++)
+      {
+        data2[i] = 0;
+      }
+      data_ = new int[new_capacity];
+      for (int i=0; i<new_capacity;i++){
+        data_[i]=data2[i];
+      }
+      delete [] data2;
+      capacity_=new_capacity;
+      data2 = nullptr;
+      return true;
     }
-    int* data2{nullptr};
-    data2 = new int[new_capacity];
-    for (int i=0; i<capacity_; i++){
-      data2[i] = data_[i];
-    }
-    for (int i=capacity_; i<new_capacity; i++){
-      data2[i] = 0;
-    }
-    data_ = new int[new_capacity];
-    for (int i=0; i<new_capacity;i++){
-      data_[i]=data2[i];
-    }
-    delete [] data2;
-    data2 = nullptr;
-    return true;
+    return false;
   }
 
   // ДЛЯ ТЕСТИРОВАНИЯ
