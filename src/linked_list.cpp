@@ -74,7 +74,26 @@ namespace assignment {
   }
 
   std::optional<int> LinkedList::Remove(int index) {
-
+    if ((front_ != nullptr) && (index <= size_) && (index >= 0)){
+      Node* p;
+      Node* curr = front_;
+      for (int i = 0; i < index; i++){
+        p = curr;
+        curr = curr->next;
+      }
+      if (curr == front_) {
+        p = curr;
+        curr = curr->next;
+        front_ = curr;
+        size_--;
+        return p->value;
+      }
+      else {
+        size_--;
+        p->next = p->next->next;
+        return curr->value;
+      }
+    }
     return std::nullopt;
   }
 
