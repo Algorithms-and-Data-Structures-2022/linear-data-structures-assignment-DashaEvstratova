@@ -22,39 +22,41 @@ namespace assignment {
   }
 
   bool LinkedList::Insert(int index, int value) {
-    Node*  newNode = new Node(value);
-    if (index == 0 && size_ == 0) {
-      front_ = newNode;
-      back_ = newNode;
-      size_++;
-      return true;
-    }
-    else if (index == 0){
-      newNode->next = front_;
-      front_ = newNode;
-    }
-    else if (index == size_-1) {
-      newNode->next = nullptr;
-      back_->next = newNode;
-      back_ = newNode;
-      size_++;
-      return true;
-      }
-    else if (0<index && index<size_-1){
-        int i = 0;
-        Node*p;
-        for(Node* curr =front_;curr!= nullptr;){
-          if (i==index) {
-            newNode->next = p->next;
-            p->next = newNode;
-            size_++;
-            return true;
-          }
-          p = curr;
-          curr = curr->next;
-          i++;
+    Node* newNode = new Node(value);
+    if ((index <= size_) && (index >= 0)){
+      if (index == 0) {
+        Node* curr =front_;
+        if (curr == nullptr){
+          front_ = newNode;
+          back_ = newNode;
+          size_=1;
+          return true;
         }
+        newNode->next = front_;
+        front_= newNode;
+        size_++;
+        return true;
       }
+      if (index == size_-1){
+        if (front_ == nullptr){
+          back_ = newNode;
+          front_ = newNode;
+          size_++;
+          return true;
+        }
+        back_->next = newNode;
+        back_ = newNode;
+        size_++;
+        return true;
+        }
+      }else {
+      Node* predCurr = FindNode((index+1));
+      Node* curr = predCurr->next;
+      predCurr->next = newNode;
+      newNode->next =curr;
+      size_++;
+      return true;
+    }
     return false;
   }
 
