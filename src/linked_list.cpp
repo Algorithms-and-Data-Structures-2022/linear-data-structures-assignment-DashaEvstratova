@@ -22,40 +22,33 @@ namespace assignment {
   }
 
   bool LinkedList::Insert(int index, int value) {
-    Node* newNode = new Node(value);
     if ((index <= size_) && (index >= 0)){
-      if (index == 0) {
-        Node* curr =front_;
-        if (curr == nullptr){
-          front_ = newNode;
-          back_ = newNode;
-          size_=1;
-          return true;
-        }
+      Node* newNode = new Node(value);
+      if (front_ == nullptr) {
+        front_ = newNode;
+        back_ = newNode;
+        size_++;
+        return true;
+      }
+      else if (index == 0) {
         newNode->next = front_;
         front_= newNode;
         size_++;
         return true;
       }
-      if (index == size_-1){
-        if (front_ == nullptr){
-          back_ = newNode;
-          front_ = newNode;
-          size_++;
-          return true;
-        }
+      if (index == size_){
         back_->next = newNode;
         back_ = newNode;
         size_++;
         return true;
         }
-      }else {
-      Node* predCurr = FindNode((index+1));
-      Node* curr = predCurr->next;
-      predCurr->next = newNode;
-      newNode->next =curr;
-      size_++;
-      return true;
+      else {
+          Node* predCurr = FindNode((index - 1));
+          newNode->next = predCurr->next;
+          predCurr->next = newNode;
+          size_++;
+          return true;
+        }
     }
     return false;
   }
